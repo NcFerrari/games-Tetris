@@ -1,10 +1,11 @@
 plugins {
     application
     alias(libs.plugins.javafx)
+    alias(libs.plugins.shadow)
 }
 
 application {
-    mainClass = "lp.games.tetris.TetrisApplication"
+    mainClass = "lp.games.tetris.Launcher"
 }
 
 java {
@@ -31,4 +32,8 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.shadowJar {
+    archiveFileName = "Tetris.jar"
 }
