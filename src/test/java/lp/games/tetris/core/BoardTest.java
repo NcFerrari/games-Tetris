@@ -51,4 +51,33 @@ class BoardTest {
                 () -> assertFalse(board.canPieceMoveAt(i, 9, 17), "I je 4 vysoké")
         );
     }
+
+    @Test
+    void lockPiecesInBoard() {
+        board = new Board(5, 5);
+        board.lock(t, 2, 1);
+        assertEquals("""
+                .....
+                ..###
+                ...#.
+                .....
+                .....
+                """, board.toString());
+        board.lock(Piece.createJ(), 3, 2);
+        assertEquals("""
+                .....
+                ..###
+                ...##
+                ....#
+                ...##
+                """, board.toString());
+        board.lock(Piece.createO(), 1, 0);
+        assertEquals("""
+                .....
+                ..###
+                ...##
+                ....#
+                ...##
+                """, board.toString());
+    }
 }

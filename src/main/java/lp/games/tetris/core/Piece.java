@@ -76,13 +76,6 @@ public class Piece {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
-        for (boolean[] rows : shape) {
-            for (boolean field : rows) {
-                result.append(field ? "#" : ".");
-            }
-            result.append("\n");
-        }
-        return result.toString();
+        return Output.render(shape);
     }
 }
