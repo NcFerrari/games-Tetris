@@ -70,6 +70,10 @@ public class Piece {
         return new Piece(rotatedShape);
     }
 
+    public boolean isFilled(int row, int column) {
+        return shape[row][column];
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();

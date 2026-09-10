@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+
 plugins {
     application
     alias(libs.plugins.javafx)
@@ -33,6 +35,10 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    testLogging {
+        events("passed", "failed", "skipped")
+        exceptionFormat = TestExceptionFormat.FULL
+    }
 }
 
 tasks.shadowJar {
