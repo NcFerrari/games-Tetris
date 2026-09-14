@@ -1,5 +1,7 @@
 package lp.games.tetris.core;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,7 +10,9 @@ import java.util.stream.IntStream;
 public class Board {
 
     private final List<List<Boolean>> grid;
+    @Getter
     private final int width;
+    @Getter
     private final int height;
 
     public Board(int width, int height) {
@@ -17,14 +21,6 @@ public class Board {
         grid = IntStream.range(0, height)
                 .mapToObj(row -> emptyRow())
                 .collect(Collectors.toList());
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
     }
 
     public boolean canPieceMoveAt(Piece piece, int x, int y) {

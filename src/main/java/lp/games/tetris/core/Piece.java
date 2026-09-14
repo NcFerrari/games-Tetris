@@ -1,5 +1,7 @@
 package lp.games.tetris.core;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +9,9 @@ public class Piece {
 
     private static final char FILL_SYMBOL = '#';
     private final List<List<Boolean>> shape;
+    @Getter
     private final int width;
+    @Getter
     private final int height;
 
     private Piece(String graphicShape) {
@@ -99,14 +103,6 @@ public class Piece {
         return new Piece("""
                 #
                 """);
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
     }
 
     public Piece rotateClockwise() {
