@@ -6,11 +6,12 @@ import java.util.List;
 public class Piece {
 
     private static final char FILL_SYMBOL = '#';
-    private List<List<Boolean>> shape = new ArrayList<>();
+    private final List<List<Boolean>> shape;
     private final int width;
     private final int height;
 
     private Piece(String graphicShape) {
+        shape = new ArrayList<>();
         String[] splitGraphicShape = graphicShape.split("\n");
         height = splitGraphicShape.length;
         width = splitGraphicShape[0].length();
