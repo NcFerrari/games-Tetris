@@ -9,11 +9,15 @@ class BoardTest {
 
     private Board board;
     private Piece t;
+    private Piece o;
+    private Piece rotatedI;
 
     @BeforeEach
     void setUp() {
         board = new Board(10, 20);
         t = Piece.createT();
+        o = Piece.createO();
+        rotatedI = Piece.createI().rotateClockwise();
     }
 
     @Test
@@ -71,13 +75,115 @@ class BoardTest {
                 ....#
                 ...##
                 """, board.toString());
-        board.lock(Piece.createO(), 1, 0);
+    }
+
+    @Test
+    void lockRejectsOccupiedPosition() {
+        board = new Board(5, 5);
+        board.lock(t, 2, 1);
+        Piece piece = Piece.createO();
+        assertThrows(IllegalArgumentException.class, () -> board.lock(piece, 1, 0));
         assertEquals("""
                 .....
                 ..###
-                ...##
+                ...#.
+                .....
+                .....
+                """, board.toString());
+    }
+
+    @Test
+    void clearNoRows() {
+        assertEquals(0, board.clearRows());
+        board.lock(rotatedI, 0, 19);
+        board.lock(rotatedI, 4, 19);
+        board.lock(rotatedI.rotateClockwise(), 8, 16);
+        assertEquals(0, board.clearRows());
+        assertEquals("""
+                ..........
+                ..........
+                ..........
+                ..........
+                ..........
+                ..........
+                ..........
+                ..........
+                ..........
+                ..........
+                ..........
+                ..........
+                ..........
+                ..........
+                ..........
+                ..........
+                ........#.
+                ........#.
+                ........#.
+                #########.
+                """, board.toString());
+    }
+
+    @Test
+    void clearRow() {
+        board.lock(rotatedI, 0, 19);
+        board.lock(rotatedI, 4, 19);
+        board.lock(o, 8, 18);
+        assertEquals(1, board.clearRows());
+        assertTrue(board.canPieceMoveAt(Piece.createPoint(), 0, 19));
+    }
+
+    @Test
+    void clearRowAndFallAllDown() {
+        board.lock(rotatedI, 0, 19);
+        board.lock(rotatedI, 4, 19);
+        board.lock(o, 8, 18);
+        board.lock(Piece.createT(), 0, 0);
+        board.lock(Piece.createS(), 4, 3);
+        board.lock(Piece.createZ(), 1, 7);
+        board.lock(Piece.createI(), 8, 9);
+        board.lock(Piece.createO(), 2, 11);
+        board.lock(Piece.createL(), 5, 12);
+        board.lock(Piece.createJ(), 0, 14);
+        board.lock(Piece.createJ(), 4, 16);
+        assertEquals(1, board.clearRows());
+        assertEquals("""
+                ..........
+                ###.......
+                .#........
+                ..........
+                .....##...
+                ....##....
+                ..........
+                ..........
+                .##.......
+                ..##......
+                ........#.
+                ........#.
+                ..##....#.
+                ..##.#..#.
+                .....#....
+                .#...##...
+                .#........
+                ##...#....
+                .....#....
+                ....##..##
+                """, board.toString());
+    }
+
+
+    @Test
+    void clearMoreRows() {
+        board = new Board(5, 5);
+        board.lock(rotatedI, 0, 2);
+        board.lock(rotatedI, 0, 4);
+        board.lock(rotatedI.rotateClockwise(), 4, 1);
+        assertEquals(2, board.clearRows());
+        assertEquals("""
+                .....
+                .....
+                .....
                 ....#
-                ...##
+                ....#
                 """, board.toString());
     }
 }

@@ -1,77 +1,127 @@
 package lp.games.tetris.core;
 
-import java.util.stream.IntStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Piece {
 
-    private final boolean[][] shape;
+    private static final char FILL_SYMBOL = '#';
+    private List<List<Boolean>> shape = new ArrayList<>();
+    private final int width;
+    private final int height;
 
-    private Piece(boolean[][] shape) {
+    private Piece(String graphicShape) {
+        String[] splitGraphicShape = graphicShape.split("\n");
+        height = splitGraphicShape.length;
+        width = splitGraphicShape[0].length();
+        for (int i = 0; i < height; i++) {
+            String splitLine = splitGraphicShape[i];
+            List<Boolean> symbols = new ArrayList<>();
+            for (int j = 0; j < width; j++) {
+                if (FILL_SYMBOL == splitLine.charAt(j)) {
+                    symbols.add(Boolean.TRUE);
+                } else {
+                    symbols.add(Boolean.FALSE);
+                }
+            }
+            shape.add(symbols);
+        }
+    }
+
+    private Piece(List<List<Boolean>> shape) {
         this.shape = shape;
+        height = shape.size();
+        width = shape.getFirst().size();
     }
 
     public static Piece createT() {
-        return new Piece(new boolean[][]{{true, true, true}, {false, true, false}});
+        return new Piece("""
+                ###
+                .#.
+                """);
     }
 
     public static Piece createI() {
-        return new Piece(new boolean[][]{{true}, {true}, {true}, {true}});
+        return new Piece("""
+                #
+                #
+                #
+                #
+                """);
     }
 
     public static Piece createO() {
-        return new Piece(new boolean[][]{{true, true}, {true, true}});
+        return new Piece("""
+                ##
+                ##
+                """);
     }
 
     public static Piece createL() {
-        return new Piece(new boolean[][]{{true, false}, {true, false}, {true, true}});
+        return new Piece("""
+                #.
+                #.
+                ##
+                """);
     }
 
     public static Piece createJ() {
-        return new Piece(new boolean[][]{{false, true}, {false, true}, {true, true}});
+        return new Piece("""
+                .#
+                .#
+                ##
+                """);
     }
 
     public static Piece createS() {
-        return new Piece(new boolean[][]{{false, true, true}, {true, true, false}});
+        return new Piece("""
+                .##
+                ##.
+                """);
     }
 
     public static Piece createZ() {
-        return new Piece(new boolean[][]{{true, true, false}, {false, true, true}});
+        return new Piece("""
+                ##.
+                .##
+                """);
     }
 
     public static Piece createU() {
-        return new Piece(new boolean[][]{{true, false, true}, {true, true, true}});
+        return new Piece("""
+                #.#
+                ###
+                """);
     }
 
     public static Piece createPoint() {
-        return new Piece(new boolean[][]{{true}});
+        return new Piece("""
+                #
+                """);
     }
 
     public int getWidth() {
-        if (shape.length > 0) {
-            return shape[0].length;
-        }
-        return 0;
+        return width;
     }
 
     public int getHeight() {
-        return shape.length;
+        return height;
     }
 
     public Piece rotateClockwise() {
-        if (shape.length == 0) {
-            return this;
+        List<List<Boolean>> rotated = new ArrayList<>();
+        for (int column = 0; column < width; column++) {
+            List<Boolean> newRow = new ArrayList<>();
+            for (int row = 0; row < height; row++) {
+                newRow.add(shape.get(height - 1 - row).get(column));
+            }
+            rotated.add(newRow);
         }
-        boolean[][] rotatedShape = new boolean[shape[0].length][shape.length];
-        IntStream.range(0, rotatedShape.length).forEach(i ->
-                IntStream.range(0, rotatedShape[i].length).forEach(j ->
-                        rotatedShape[i][j] = shape[rotatedShape[i].length - 1 - j][i]
-                )
-        );
-        return new Piece(rotatedShape);
+        return new Piece(rotated);
     }
 
     public boolean isFilled(int row, int column) {
-        return shape[row][column];
+        return Boolean.TRUE.equals(shape.get(row).get(column));
     }
 
     @Override

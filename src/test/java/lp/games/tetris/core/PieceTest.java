@@ -2,7 +2,9 @@ package lp.games.tetris.core;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PieceTest {
 
@@ -55,12 +57,12 @@ class PieceTest {
     @Test
     void isFilled() {
         Piece t = Piece.createT();
-        assertTrue(t.isFilled(0,0));
-        assertTrue(t.isFilled(0,1));
-        assertTrue(t.isFilled(0,2));
-        assertFalse(t.isFilled(1,0));
-        assertTrue(t.isFilled(1,1));
-        assertFalse(t.isFilled(1,2));
+        assertTrue(t.isFilled(0, 0));
+        assertTrue(t.isFilled(0, 1));
+        assertTrue(t.isFilled(0, 2));
+        assertFalse(t.isFilled(1, 0));
+        assertTrue(t.isFilled(1, 1));
+        assertFalse(t.isFilled(1, 2));
     }
 
     @Test
