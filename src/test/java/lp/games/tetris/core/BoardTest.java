@@ -189,10 +189,10 @@ class BoardTest {
 
     @Test
     void isOccupied() {
-        board = new Board(5, 5);
+        board = new Board(5, 6);
         board.lock(Piece.createL(), 1, 2);
-        for (int x = 0; x < board.getHeight(); x++) {
-            for (int y = 0; y < board.getWidth(); y++) {
+        for (int y = 0; y < board.getHeight(); y++) {
+            for (int x = 0; x < board.getWidth(); x++) {
                 if (x == 1 && y == 2 || x == 1 && y == 3 || x == 1 && y == 4 || x == 2 && y == 4) {
                     assertTrue(board.isOccupied(x, y));
                     continue;
