@@ -186,4 +186,19 @@ class BoardTest {
                 ....#
                 """, board.toString());
     }
+
+    @Test
+    void isOccupied() {
+        board = new Board(5, 5);
+        board.lock(Piece.createL(), 1, 2);
+        for (int x = 0; x < board.getHeight(); x++) {
+            for (int y = 0; y < board.getWidth(); y++) {
+                if (x == 1 && y == 2 || x == 1 && y == 3 || x == 1 && y == 4 || x == 2 && y == 4) {
+                    assertTrue(board.isOccupied(x, y));
+                    continue;
+                }
+                assertFalse(board.isOccupied(x, y));
+            }
+        }
+    }
 }

@@ -58,6 +58,10 @@ public class Board {
         return true;
     }
 
+    public boolean isOccupied(int x, int y) {
+        return Boolean.TRUE.equals(grid.get(y).get(x));
+    }
+
     @Override
     public String toString() {
         return Output.render(grid);
