@@ -16,7 +16,6 @@ class GameTest {
     void setUp() {
         board = new Board(5, 6);
         game = new Game(board, Piece::createT);
-        game.spawn();
     }
 
     @Test
@@ -86,7 +85,6 @@ class GameTest {
     @Test
     void fallAndRemoveLines() {
         game = new Game(board, () -> Piece.createZ().rotateClockwise());
-        game.spawn();
         board.lock(Piece.createI(), 0, 2);
         board.lock(Piece.createJ(), 1, 3);
         board.lock(Piece.createJ().rotateClockwise().rotateClockwise(), 3, 3);
@@ -151,9 +149,6 @@ class GameTest {
             calls.incrementAndGet();
             return Piece.createT();
         });
-
-        game.spawn();
-
         assertEquals(1, calls.get());
     }
 

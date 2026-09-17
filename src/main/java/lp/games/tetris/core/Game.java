@@ -21,9 +21,10 @@ public class Game {
     public Game(Board board, Supplier<Piece> nextPiece) {
         this.board = board;
         this.nextPiece = nextPiece;
+        spawn();
     }
 
-    public void spawn() {
+    private void spawn() {
         Piece newPiece = nextPiece.get();
         int x = (board.getWidth() - newPiece.getWidth()) / 2;
         int y = 0;
