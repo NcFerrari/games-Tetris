@@ -20,7 +20,7 @@ class GameTest {
 
     @Test
     void spawn() {
-        assertEquals(new Position(1, 0), game.getCurrentPosition());
+        assertEquals(new Position(1, 0), game.getPositionOfCurrentPiece());
         assertEquals("""
                 ###
                 .#.
@@ -29,28 +29,28 @@ class GameTest {
 
     @Test
     void moveToSidesWithoutBlocks() {
-        assertEquals(new Position(1, 0), game.getCurrentPosition());
+        assertEquals(new Position(1, 0), game.getPositionOfCurrentPiece());
         assertTrue(game.moveRight());
-        assertEquals(new Position(2, 0), game.getCurrentPosition());
+        assertEquals(new Position(2, 0), game.getPositionOfCurrentPiece());
         assertFalse(game.moveRight());
-        assertEquals(new Position(2, 0), game.getCurrentPosition());
+        assertEquals(new Position(2, 0), game.getPositionOfCurrentPiece());
 
         assertTrue(game.moveLeft());
-        assertEquals(new Position(1, 0), game.getCurrentPosition());
+        assertEquals(new Position(1, 0), game.getPositionOfCurrentPiece());
         assertTrue(game.moveLeft());
-        assertEquals(new Position(0, 0), game.getCurrentPosition());
+        assertEquals(new Position(0, 0), game.getPositionOfCurrentPiece());
         assertFalse(game.moveLeft());
-        assertEquals(new Position(0, 0), game.getCurrentPosition());
+        assertEquals(new Position(0, 0), game.getPositionOfCurrentPiece());
     }
 
     @Test
     void moveToSidesWithBlocks() {
         board.lock(Piece.createI(), 4, 1);
-        assertEquals(new Position(1, 0), game.getCurrentPosition());
+        assertEquals(new Position(1, 0), game.getPositionOfCurrentPiece());
         assertTrue(game.moveRight());
-        assertEquals(new Position(2, 0), game.getCurrentPosition());
+        assertEquals(new Position(2, 0), game.getPositionOfCurrentPiece());
         assertTrue(game.moveLeft());
-        assertEquals(new Position(1, 0), game.getCurrentPosition());
+        assertEquals(new Position(1, 0), game.getPositionOfCurrentPiece());
 
         board.lock(Piece.createPoint(), 4, 0);
         assertFalse(game.moveRight());
@@ -60,13 +60,13 @@ class GameTest {
     }
 
     @Test
-    void fallDown() {
-        assertEquals(new Position(1, 0), game.getCurrentPosition());
-        assertTrue(game.fall());
-        assertTrue(game.fall());
-        assertTrue(game.fall());
-        assertTrue(game.fall());
-        assertFalse(game.fall());
+    void moveDown() {
+        assertEquals(new Position(1, 0), game.getPositionOfCurrentPiece());
+        assertTrue(game.moveDown());
+        assertTrue(game.moveDown());
+        assertTrue(game.moveDown());
+        assertTrue(game.moveDown());
+        assertFalse(game.moveDown());
         assertEquals("""
                 .....
                 .....
@@ -75,7 +75,7 @@ class GameTest {
                 .###.
                 ..#..
                 """, board.toString());
-        assertEquals(new Position(1, 0), game.getCurrentPosition());
+        assertEquals(new Position(1, 0), game.getPositionOfCurrentPiece());
         assertEquals("""
                 ###
                 .#.
@@ -83,13 +83,13 @@ class GameTest {
     }
 
     @Test
-    void fallAndRemoveLines() {
+    void moveDownAndRemoveLines() {
         game = new Game(board, () -> Piece.createZ().rotateClockwise());
         board.lock(Piece.createI(), 0, 2);
         board.lock(Piece.createJ(), 1, 3);
         board.lock(Piece.createJ().rotateClockwise().rotateClockwise(), 3, 3);
-        assertTrue(game.fall());
-        assertFalse(game.fall());
+        assertTrue(game.moveDown());
+        assertFalse(game.moveDown());
         assertEquals("""
                 .....
                 .....
@@ -98,7 +98,7 @@ class GameTest {
                 #.##.
                 ####.
                 """, board.toString());
-        assertEquals(1, game.getClearedRows());
+        assertEquals(1, game.getScore());
     }
 
     @Test
@@ -132,10 +132,10 @@ class GameTest {
     @Test
     void commandsDoNothingAfterGameOver() {
         while (!game.isGameOver()) {
-            game.fall();
+            game.moveDown();
         }
         assertAll(
-                () -> assertFalse(game.fall()),
+                () -> assertFalse(game.moveDown()),
                 () -> assertFalse(game.moveLeft()),
                 () -> assertFalse(game.moveRight()),
                 () -> assertFalse(game.rotateClockwise())

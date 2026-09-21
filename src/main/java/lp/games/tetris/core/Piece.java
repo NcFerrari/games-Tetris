@@ -1,6 +1,7 @@
 package lp.games.tetris.core;
 
 import lombok.Getter;
+import lp.games.tetris.common.ShapeType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,11 +11,14 @@ public class Piece {
     private static final char FILL_SYMBOL = '#';
     private final List<List<Boolean>> shape;
     @Getter
+    private final ShapeType shapeType;
+    @Getter
     private final int width;
     @Getter
     private final int height;
 
-    private Piece(String graphicShape) {
+    private Piece(String graphicShape, ShapeType shapeType) {
+        this.shapeType = shapeType;
         shape = new ArrayList<>();
         String[] splitGraphicShape = graphicShape.split("\n");
         height = splitGraphicShape.length;
@@ -33,8 +37,9 @@ public class Piece {
         }
     }
 
-    private Piece(List<List<Boolean>> shape) {
+    private Piece(List<List<Boolean>> shape, ShapeType shapeType) {
         this.shape = shape;
+        this.shapeType = shapeType;
         height = shape.size();
         width = shape.getFirst().size();
     }
@@ -43,7 +48,7 @@ public class Piece {
         return new Piece("""
                 ###
                 .#.
-                """);
+                """, ShapeType.T);
     }
 
     public static Piece createI() {
@@ -52,14 +57,14 @@ public class Piece {
                 #
                 #
                 #
-                """);
+                """, ShapeType.I);
     }
 
     public static Piece createO() {
         return new Piece("""
                 ##
                 ##
-                """);
+                """, ShapeType.O);
     }
 
     public static Piece createL() {
@@ -67,7 +72,7 @@ public class Piece {
                 #.
                 #.
                 ##
-                """);
+                """, ShapeType.L);
     }
 
     public static Piece createJ() {
@@ -75,34 +80,34 @@ public class Piece {
                 .#
                 .#
                 ##
-                """);
+                """, ShapeType.J);
     }
 
     public static Piece createS() {
         return new Piece("""
                 .##
                 ##.
-                """);
+                """, ShapeType.S);
     }
 
     public static Piece createZ() {
         return new Piece("""
                 ##.
                 .##
-                """);
+                """, ShapeType.Z);
     }
 
     public static Piece createU() {
         return new Piece("""
                 #.#
                 ###
-                """);
+                """, ShapeType.U);
     }
 
     public static Piece createPoint() {
         return new Piece("""
                 #
-                """);
+                """, ShapeType.POINT);
     }
 
     public Piece rotateClockwise() {
@@ -114,7 +119,7 @@ public class Piece {
             }
             rotated.add(newRow);
         }
-        return new Piece(rotated);
+        return new Piece(rotated, getShapeType());
     }
 
     public boolean isFilled(int row, int column) {

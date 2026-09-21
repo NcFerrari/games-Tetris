@@ -7,14 +7,15 @@ import java.util.function.Supplier;
 public class Game {
 
     private final Supplier<Piece> nextPiece;
+    @Getter
     private final Board board;
 
     @Getter
-    private Position currentPosition;
+    private Position positionOfCurrentPiece;
     @Getter
     private Piece currentPiece;
     @Getter
-    private int clearedRows;
+    private int score;
     @Getter
     private boolean gameOver;
 
@@ -30,7 +31,7 @@ public class Game {
         int y = 0;
         if (board.canPieceMoveAt(newPiece, x, y)) {
             currentPiece = newPiece;
-            currentPosition = new Position(x, y);
+            positionOfCurrentPiece = new Position(x, y);
         } else {
             gameOver = true;
         }
@@ -40,10 +41,10 @@ public class Game {
         if (gameOver) {
             return false;
         }
-        int x = currentPosition.x() + moveByX;
-        int y = currentPosition.y() + moveByY;
+        int x = positionOfCurrentPiece.x() + moveByX;
+        int y = positionOfCurrentPiece.y() + moveByY;
         if (board.canPieceMoveAt(currentPiece, x, y)) {
-            currentPosition = new Position(x, y);
+            positionOfCurrentPiece = new Position(x, y);
             return true;
         }
         return false;
@@ -57,15 +58,15 @@ public class Game {
         return move(1, 0);
     }
 
-    public boolean fall() {
+    public boolean moveDown() {
         if (gameOver) {
             return false;
         }
         if (move(0, 1)) {
             return true;
         }
-        board.lock(currentPiece, currentPosition.x(), currentPosition.y());
-        clearedRows += board.clearRows();
+        board.lock(currentPiece, positionOfCurrentPiece.x(), positionOfCurrentPiece.y());
+        score += board.clearRows();
         spawn();
         return false;
     }
@@ -75,7 +76,7 @@ public class Game {
             return false;
         }
         Piece possibleRotate = currentPiece.rotateClockwise();
-        if (board.canPieceMoveAt(possibleRotate, currentPosition.x(), currentPosition.y())) {
+        if (board.canPieceMoveAt(possibleRotate, positionOfCurrentPiece.x(), positionOfCurrentPiece.y())) {
             currentPiece = possibleRotate;
             return true;
         }
@@ -84,6 +85,7 @@ public class Game {
 
     @Override
     public String toString() {
-        return Output.gameRender(board, currentPiece, currentPosition);
+        return Output.gameRender(board, currentPiece, positionOfCurrentPiece);
     }
+
 }
