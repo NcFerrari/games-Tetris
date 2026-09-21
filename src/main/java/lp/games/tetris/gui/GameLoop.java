@@ -1,22 +1,17 @@
 package lp.games.tetris.gui;
 
 import javafx.animation.AnimationTimer;
-import lombok.Getter;
-import lombok.Setter;
 import lp.games.tetris.core.Game;
 
 public class GameLoop {
 
     private static final int DELAY = 500_000_000;
     private final Game game;
-    private final ShapeActions shapeActions;
-    @Getter
-    @Setter
-    private int score;
+    private final PieceActions pieceActions;
 
-    public GameLoop(Game game, ShapeActions shapeActions) {
+    public GameLoop(Game game, PieceActions pieceActions) {
         this.game = game;
-        this.shapeActions = shapeActions;
+        this.pieceActions = pieceActions;
     }
 
     public void startGame() {
@@ -29,7 +24,7 @@ public class GameLoop {
                     stop();
                 }
                 if (time > stopTime + DELAY) {
-                    shapeActions.fallDown();
+                    pieceActions.fallDown();
                     stopTime = time;
                 }
             }

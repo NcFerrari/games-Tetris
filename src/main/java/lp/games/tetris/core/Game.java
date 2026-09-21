@@ -87,5 +87,4 @@ public class Game {
     public String toString() {
         return Output.gameRender(board, currentPiece, positionOfCurrentPiece);
     }
-
 }
