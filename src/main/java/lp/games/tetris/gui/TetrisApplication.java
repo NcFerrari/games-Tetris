@@ -36,6 +36,7 @@ public class TetrisApplication extends Application {
         BorderPane mainPane = new BorderPane();
 
         Pane pane = new Pane();
+        pane.getStyleClass().add("pane");
         pane.setPrefSize(GAME_WIDTH, GAME_HEIGHT);
         mainPane.setCenter(pane);
 
