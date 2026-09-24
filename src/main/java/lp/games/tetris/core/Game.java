@@ -22,7 +22,7 @@ public class Game {
     public Game(Board board, Supplier<Piece> nextPiece) {
         this.board = board;
         this.nextPiece = nextPiece;
-        spawn();
+        startNewGame();
     }
 
     private void spawn() {
@@ -66,7 +66,7 @@ public class Game {
             return true;
         }
         board.lock(currentPiece, positionOfCurrentPiece.x(), positionOfCurrentPiece.y());
-        score += board.clearRows();
+        score += board.clearFilledRows();
         spawn();
         return false;
     }
@@ -81,6 +81,13 @@ public class Game {
             return true;
         }
         return false;
+    }
+
+    public void startNewGame() {
+        gameOver = false;
+        board.clear();
+        score = 0;
+        spawn();
     }
 
     @Override

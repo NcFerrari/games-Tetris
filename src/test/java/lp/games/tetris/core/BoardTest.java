@@ -57,6 +57,14 @@ class BoardTest {
     }
 
     @Test
+    void pieceInInside() {
+        assertFalse(board.canPieceMoveAt(Piece.createS(), -1, 1));
+        assertFalse(board.canPieceMoveAt(Piece.createS(), 1, -1));
+        assertFalse(board.canPieceMoveAt(Piece.createS(), Integer.MAX_VALUE, 1));
+        assertFalse(board.canPieceMoveAt(Piece.createS(), 1, Integer.MAX_VALUE));
+    }
+
+    @Test
     void lockPiecesInBoard() {
         board = new Board(5, 5);
         board.lock(t, 2, 1);
@@ -94,11 +102,11 @@ class BoardTest {
 
     @Test
     void clearNoRows() {
-        assertEquals(0, board.clearRows());
+        assertEquals(0, board.clearFilledRows());
         board.lock(rotatedI, 0, 19);
         board.lock(rotatedI, 4, 19);
         board.lock(rotatedI.rotateClockwise(), 8, 16);
-        assertEquals(0, board.clearRows());
+        assertEquals(0, board.clearFilledRows());
         assertEquals("""
                 ..........
                 ..........
@@ -128,7 +136,7 @@ class BoardTest {
         board.lock(rotatedI, 0, 19);
         board.lock(rotatedI, 4, 19);
         board.lock(o, 8, 18);
-        assertEquals(1, board.clearRows());
+        assertEquals(1, board.clearFilledRows());
         assertTrue(board.canPieceMoveAt(Piece.createPoint(), 0, 19));
     }
 
@@ -145,7 +153,7 @@ class BoardTest {
         board.lock(Piece.createL(), 5, 12);
         board.lock(Piece.createJ(), 0, 14);
         board.lock(Piece.createJ(), 4, 16);
-        assertEquals(1, board.clearRows());
+        assertEquals(1, board.clearFilledRows());
         assertEquals("""
                 ..........
                 ###.......
@@ -177,7 +185,7 @@ class BoardTest {
         board.lock(rotatedI, 0, 2);
         board.lock(rotatedI, 0, 4);
         board.lock(rotatedI.rotateClockwise(), 4, 1);
-        assertEquals(2, board.clearRows());
+        assertEquals(2, board.clearFilledRows());
         assertEquals("""
                 .....
                 .....
@@ -190,13 +198,24 @@ class BoardTest {
     @Test
     void isOccupied() {
         board = new Board(5, 6);
-        board.lock(Piece.createL(), 1, 2);
+        Piece l = Piece.createL();
+        board.lock(l, 1, 2);
         for (int y = 0; y < board.getHeight(); y++) {
             for (int x = 0; x < board.getWidth(); x++) {
                 if (x == 1 && y == 2 || x == 1 && y == 3 || x == 1 && y == 4 || x == 2 && y == 4) {
                     assertTrue(board.isOccupied(x, y));
                     continue;
                 }
+                assertFalse(board.isOccupied(x, y));
+            }
+        }
+        assertFalse(board.canPieceMoveAt(l, 1, 2));
+        board.lock(Piece.createI().rotateClockwise(), 0, 1);
+        board.lock(Piece.createPoint(), 4, 1);
+
+        board.clear();
+        for (int y = 0; y < board.getHeight(); y++) {
+            for (int x = 0; x < board.getWidth(); x++) {
                 assertFalse(board.isOccupied(x, y));
             }
         }

@@ -165,4 +165,35 @@ class GameTest {
                 ##..#
                 """, game.toString());
     }
+
+    @Test
+    void newGame() {
+        game = new Game(board, Piece::createI);
+
+        board.lock(Piece.createI(), 0, 2);
+        board.lock(Piece.createI(), 1, 2);
+        board.lock(Piece.createI(), 3, 2);
+        board.lock(Piece.createI(), 4, 2);
+        game.moveDown();
+        game.moveDown();
+        game.moveDown();
+        assertEquals(4, game.getScore());
+
+        game.moveDown();
+        game.moveDown();
+        game.moveDown();
+        assertTrue(game.isGameOver());
+
+        game.startNewGame();
+        assertFalse(game.isGameOver());
+        assertEquals(0, game.getScore());
+        assertEquals("""
+                .....
+                .....
+                .....
+                .....
+                .....
+                .....
+                """, board.toString());
+    }
 }

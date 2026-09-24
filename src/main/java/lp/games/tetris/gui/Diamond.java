@@ -2,16 +2,20 @@ package lp.games.tetris.gui;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 
 public class Diamond {
 
-    public static ImageView createDiamond(double x, double y, double size, Image image) {
+    public static StackPane createDiamond(double x, double y, double size, Image image) {
         ImageView imageView = new ImageView(image);
         imageView.setFitWidth(size);
         imageView.setFitHeight(size);
-        imageView.setX(x * size);
-        imageView.setY(y * size);
-        return imageView;
+
+        StackPane imageContainer = new StackPane(imageView);
+        imageContainer.getStyleClass().add("image-frame");
+        imageContainer.setLayoutX(x * size);
+        imageContainer.setLayoutY(y * size);
+        return imageContainer;
     }
 
     private Diamond() {

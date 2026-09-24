@@ -9,7 +9,7 @@ import java.util.stream.IntStream;
 
 public class Board {
 
-    private final List<List<Boolean>> grid;
+    private List<List<Boolean>> grid;
     @Getter
     private final int width;
     @Getter
@@ -18,9 +18,7 @@ public class Board {
     public Board(int width, int height) {
         this.width = width;
         this.height = height;
-        grid = IntStream.range(0, height)
-                .mapToObj(row -> emptyRow())
-                .collect(Collectors.toList());
+        clear();
     }
 
     public boolean canPieceMoveAt(Piece piece, int x, int y) {
@@ -50,7 +48,7 @@ public class Board {
     private boolean areFieldsFree(Piece piece, int x, int y) {
         for (int row = 0; row < piece.getHeight(); row++) {
             for (int column = 0; column < piece.getWidth(); column++) {
-                if (piece.isFilled(row, column) && Boolean.TRUE.equals(grid.get(y + row).get(x + column))) {
+                if (y + row > grid.size() || x + column > grid.getFirst().size() || piece.isFilled(row, column) && Boolean.TRUE.equals(grid.get(y + row).get(x + column))) {
                     return false;
                 }
             }
@@ -67,7 +65,7 @@ public class Board {
         return Output.render(grid);
     }
 
-    public int clearRows() {
+    public int clearFilledRows() {
         int before = grid.size();
         grid.removeIf(row -> !row.contains(Boolean.FALSE));
         int removed = before - grid.size();
@@ -79,5 +77,11 @@ public class Board {
 
     private List<Boolean> emptyRow() {
         return IntStream.range(0, width).mapToObj(col -> Boolean.FALSE).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public void clear() {
+        grid = IntStream.range(0, height)
+                .mapToObj(row -> emptyRow())
+                .collect(Collectors.toList());
     }
 }
