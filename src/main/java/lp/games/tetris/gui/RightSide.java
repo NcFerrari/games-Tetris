@@ -20,11 +20,11 @@ public class RightSide extends VBox {
     private final Runnable startNewGameAction;
     private final double maxHeight;
 
-    public RightSide(double width, StringProperty stringProperty, ObjectProperty<List<StackPane>> pieceProperty, Runnable startNewGameAction, String newGameText, double maxHeight) {
-        setPrefWidth(width);
-        this.startNewGameAction = startNewGameAction;
-        this.maxHeight = maxHeight;
-        initComponents(width, stringProperty, pieceProperty, newGameText);
+    public RightSide(RightSideValues values) {
+        setPrefWidth(values.width());
+        startNewGameAction = values.startNewGameAction();
+        maxHeight = values.maxHeight();
+        initComponents(values.width(), values.stringProperty(), values.pieceProperty(), values.newGameText());
     }
 
     private void initComponents(double width, StringProperty stringProperty, ObjectProperty<List<StackPane>> pieceProperty, String newGameText) {

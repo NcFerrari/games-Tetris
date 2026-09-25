@@ -58,7 +58,14 @@ public class TetrisApplication extends Application {
 
         GameOverDialog gameOverDialog = new GameOverDialog(START_NEW_GAME_TEXT, GAME_OVER_TEXT, GAME_CLOSE_TEXT, this::startNewGame);
         gameLoop = new GameLoop(game, pieceActions, gameOverDialog);
-        mainPane.setRight(new RightSide(STATISTIC_PANE_WIDTH, rendering.getScoreProperty(), rendering.getPieceProperty(), this::startNewGame, START_NEW_GAME_TEXT, FIELD_SIZE * 4));
+        mainPane.setRight(new RightSide(new RightSideValues(
+                STATISTIC_PANE_WIDTH,
+                rendering.getScoreProperty(),
+                rendering.getPieceProperty(),
+                this::startNewGame,
+                START_NEW_GAME_TEXT,
+                FIELD_SIZE * 4
+        )));
 
         startNewGame();
     }
