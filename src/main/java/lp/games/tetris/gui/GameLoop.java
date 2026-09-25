@@ -6,7 +6,8 @@ import lp.games.tetris.core.Game;
 public class GameLoop {
 
     private static final int DELAY = 500_000_000;
-    private static final long DELAY_SPEED = 5_000_000;
+    private static final long DELAY_SPEED = 3_000_000;
+    private static final long DELAY_MAX_SPEED = 300_000_000;
     private final AnimationTimer animationTimer;
 
     public GameLoop(Game game, PieceActions pieceActions, GameOverDialog gameOverDialog) {
@@ -20,7 +21,7 @@ public class GameLoop {
                     gameOverDialog.show();
                     return;
                 }
-                if (time > stopTime + DELAY - game.getScore() * DELAY_SPEED) {
+                if (time > stopTime + DELAY - Long.max(game.getScore() * DELAY_SPEED, DELAY_MAX_SPEED)) {
                     pieceActions.fallDown();
                     stopTime = time;
                 }

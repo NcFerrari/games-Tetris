@@ -1,5 +1,7 @@
 package lp.games.tetris.gui;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.image.Image;
@@ -21,17 +23,21 @@ public class Rendering {
     private final double fieldSize;
     @Getter
     private final StringProperty scoreProperty;
+    @Getter
+    private final ObjectProperty<List<StackPane>> pieceProperty;
 
     public Rendering(Pane pane, Game game, double fieldSize) {
         this.pane = pane;
         this.game = game;
         this.fieldSize = fieldSize;
         scoreProperty = new SimpleStringProperty();
+        pieceProperty = new SimpleObjectProperty<>();
     }
 
     public void renderPane() {
         pane.getChildren().clear();
         scoreProperty.set(String.valueOf(game.getScore()));
+        pieceProperty.set(renderPiece(game.getNextPiece(), 0, 0));
         List<StackPane> images = new ArrayList<>();
         Board board = game.getBoard();
         for (int x = 0; x < board.getWidth(); x++) {
@@ -42,16 +48,14 @@ public class Rendering {
             }
         }
         if (!game.isGameOver()) {
-            renderPiece(images);
+            images.addAll(renderPiece(game.getCurrentPiece(), game.getPositionOfCurrentPiece().x(), game.getPositionOfCurrentPiece().y()));
         }
         pane.getChildren().addAll(images);
     }
 
-    private void renderPiece(List<StackPane> images) {
-        Piece piece = game.getCurrentPiece();
-        double baseX = game.getPositionOfCurrentPiece().x();
-        double baseY = game.getPositionOfCurrentPiece().y();
+    private List<StackPane> renderPiece(Piece piece, double baseX, double baseY) {
         Image pieceImage = DiamondColor.getDiamondColor(piece.getShapeType()).getImage();
+        List<StackPane> images = new ArrayList<>();
         for (int x = 0; x < piece.getWidth(); x++) {
             for (int y = 0; y < piece.getHeight(); y++) {
                 if (piece.isFilled(y, x)) {
@@ -59,5 +63,6 @@ public class Rendering {
                 }
             }
         }
+        return images;
     }
 }

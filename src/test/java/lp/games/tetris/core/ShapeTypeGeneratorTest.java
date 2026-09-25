@@ -8,7 +8,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class PieceGeneratorTest {
+class ShapeTypeGeneratorTest {
 
     private static final int SEED = 42;
 

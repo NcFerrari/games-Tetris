@@ -149,7 +149,7 @@ class GameTest {
             calls.incrementAndGet();
             return Piece.createT();
         });
-        assertEquals(1, calls.get());
+        assertEquals(2, calls.get());
     }
 
     @Test

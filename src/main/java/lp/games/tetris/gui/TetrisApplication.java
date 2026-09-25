@@ -20,6 +20,7 @@ public class TetrisApplication extends Application {
     private static final String GAME_CLOSE_TEXT = "Ukončit hru";
     private static final String CSS_FILE_NODES = "/css/nodes.css";
     private static final String CSS_FILE_PANE = "/css/pane.css";
+    private static final String PANE_ID = "pane";
     private static final int FIELDS_IN_ROW = 10;
     private static final int FIELDS_IN_COLUMN = 20;
     private static final double FIELD_SIZE = 40;
@@ -36,7 +37,7 @@ public class TetrisApplication extends Application {
         BorderPane mainPane = new BorderPane();
 
         Pane pane = new Pane();
-        pane.getStyleClass().add("pane");
+        pane.getStyleClass().add(PANE_ID);
         pane.setPrefSize(GAME_WIDTH, GAME_HEIGHT);
         mainPane.setCenter(pane);
 
@@ -57,7 +58,7 @@ public class TetrisApplication extends Application {
 
         GameOverDialog gameOverDialog = new GameOverDialog(START_NEW_GAME_TEXT, GAME_OVER_TEXT, GAME_CLOSE_TEXT, this::startNewGame);
         gameLoop = new GameLoop(game, pieceActions, gameOverDialog);
-        mainPane.setRight(new RightSide(STATISTIC_PANE_WIDTH, rendering.getScoreProperty(), this::startNewGame, START_NEW_GAME_TEXT));
+        mainPane.setRight(new RightSide(STATISTIC_PANE_WIDTH, rendering.getScoreProperty(), rendering.getPieceProperty(), this::startNewGame, START_NEW_GAME_TEXT, FIELD_SIZE * 4));
 
         startNewGame();
     }

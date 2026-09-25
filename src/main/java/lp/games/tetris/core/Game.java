@@ -6,10 +6,9 @@ import java.util.function.Supplier;
 
 public class Game {
 
-    private final Supplier<Piece> nextPiece;
+    private final Supplier<Piece> generatedPiece;
     @Getter
     private final Board board;
-
     @Getter
     private Position positionOfCurrentPiece;
     @Getter
@@ -18,23 +17,26 @@ public class Game {
     private int score;
     @Getter
     private boolean gameOver;
+    @Getter
+    private Piece nextPiece;
 
-    public Game(Board board, Supplier<Piece> nextPiece) {
+    public Game(Board board, Supplier<Piece> generatedPiece) {
         this.board = board;
-        this.nextPiece = nextPiece;
+        this.generatedPiece = generatedPiece;
+        nextPiece = generatedPiece.get();
         startNewGame();
     }
 
     private void spawn() {
-        Piece newPiece = nextPiece.get();
-        int x = (board.getWidth() - newPiece.getWidth()) / 2;
+        int x = (board.getWidth() - nextPiece.getWidth()) / 2;
         int y = 0;
-        if (board.canPieceMoveAt(newPiece, x, y)) {
-            currentPiece = newPiece;
+        if (board.canPieceMoveAt(nextPiece, x, y)) {
+            currentPiece = nextPiece;
             positionOfCurrentPiece = new Position(x, y);
         } else {
             gameOver = true;
         }
+        nextPiece = generatedPiece.get();
     }
 
     private boolean move(int moveByX, int moveByY) {

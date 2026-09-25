@@ -12,7 +12,6 @@ public class Diamond {
         imageView.setFitHeight(size);
 
         StackPane imageContainer = new StackPane(imageView);
-        imageContainer.getStyleClass().add("image-frame");
         imageContainer.setLayoutX(x * size);
         imageContainer.setLayoutY(y * size);
         return imageContainer;
