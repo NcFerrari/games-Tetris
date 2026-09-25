@@ -1,7 +1,5 @@
 package lp.games.tetris.gui;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.image.Image;
@@ -18,51 +16,69 @@ import java.util.List;
 
 public class Rendering {
 
-    private final Pane pane;
+    private final Pane boardPane;
+    private final Pane nextPiecePane;
     private final Game game;
     private final double fieldSize;
     @Getter
-    private final StringProperty scoreProperty;
-    @Getter
-    private final ObjectProperty<List<StackPane>> pieceProperty;
+    private final StringProperty scoreProperty = new SimpleStringProperty();
+    private boolean blinkVisible;
 
-    public Rendering(Pane pane, Game game, double fieldSize) {
-        this.pane = pane;
+    public Rendering(Pane boardPane, Pane nextPiecePane, Game game, double fieldSize) {
+        this.boardPane = boardPane;
+        this.nextPiecePane = nextPiecePane;
         this.game = game;
         this.fieldSize = fieldSize;
-        scoreProperty = new SimpleStringProperty();
-        pieceProperty = new SimpleObjectProperty<>();
     }
 
-    public void renderPane() {
-        pane.getChildren().clear();
+    public void setBlinkVisible(boolean blinkVisible) {
+        this.blinkVisible = blinkVisible;
+    }
+
+    public void render() {
         scoreProperty.set(String.valueOf(game.getScore()));
-        pieceProperty.set(renderPiece(game.getNextPiece(), 0, 0));
-        List<StackPane> images = new ArrayList<>();
+        renderBoard();
+        renderNextPiece();
+    }
+
+    private void renderBoard() {
+        List<StackPane> diamonds = new ArrayList<>();
         Board board = game.getBoard();
+        List<Integer> rowsToClear = game.getRowsToClear();
         for (int x = 0; x < board.getWidth(); x++) {
             for (int y = 0; y < board.getHeight(); y++) {
                 if (board.isOccupied(x, y)) {
-                    images.add(Diamond.createDiamond(x, y, fieldSize, DiamondColor.SILVER.getImage()));
+                    diamonds.add(Diamond.createDiamond(x, y, fieldSize, lockedFieldImage(rowsToClear, y)));
                 }
             }
         }
-        if (!game.isGameOver()) {
-            images.addAll(renderPiece(game.getCurrentPiece(), game.getPositionOfCurrentPiece().x(), game.getPositionOfCurrentPiece().y()));
+        if (!game.isGameOver() && !game.hasRowsToClear()) {
+            diamonds.addAll(renderPiece(game.getCurrentPiece(),
+                    game.getPositionOfCurrentPiece().x(),
+                    game.getPositionOfCurrentPiece().y()));
         }
-        pane.getChildren().addAll(images);
+        boardPane.getChildren().setAll(diamonds);
+    }
+
+    private Image lockedFieldImage(List<Integer> rowsToClear, int row) {
+        boolean blinking = blinkVisible && rowsToClear.contains(row);
+        return blinking ? DiamondColor.GOLD.getImage() : DiamondColor.SILVER.getImage();
+    }
+
+    private void renderNextPiece() {
+        nextPiecePane.getChildren().setAll(renderPiece(game.getNextPiece(), 0, 0));
     }
 
     private List<StackPane> renderPiece(Piece piece, double baseX, double baseY) {
         Image pieceImage = DiamondColor.getDiamondColor(piece.getShapeType()).getImage();
-        List<StackPane> images = new ArrayList<>();
+        List<StackPane> diamonds = new ArrayList<>();
         for (int x = 0; x < piece.getWidth(); x++) {
             for (int y = 0; y < piece.getHeight(); y++) {
                 if (piece.isFilled(y, x)) {
-                    images.add(Diamond.createDiamond(x + baseX, y + baseY, fieldSize, pieceImage));
+                    diamonds.add(Diamond.createDiamond(x + baseX, y + baseY, fieldSize, pieceImage));
                 }
             }
         }
-        return images;
+        return diamonds;
     }
 }

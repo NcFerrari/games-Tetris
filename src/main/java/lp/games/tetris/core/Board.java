@@ -41,14 +41,14 @@ public class Board {
     private boolean willBeInside(Piece piece, int x, int y) {
         return x >= 0
                 && y >= 0
-                && x + piece.getWidth() <= getWidth()
-                && y + piece.getHeight() <= getHeight();
+                && piece.getWidth() <= width - x
+                && piece.getHeight() <= height - y;
     }
 
     private boolean areFieldsFree(Piece piece, int x, int y) {
         for (int row = 0; row < piece.getHeight(); row++) {
             for (int column = 0; column < piece.getWidth(); column++) {
-                if (y + row > grid.size() || x + column > grid.getFirst().size() || piece.isFilled(row, column) && Boolean.TRUE.equals(grid.get(y + row).get(x + column))) {
+                if (piece.isFilled(row, column) && Boolean.TRUE.equals(grid.get(y + row).get(x + column))) {
                     return false;
                 }
             }
@@ -63,6 +63,16 @@ public class Board {
     @Override
     public String toString() {
         return Output.render(grid);
+    }
+
+    public List<Integer> findFilledRows() {
+        List<Integer> filledRows = new ArrayList<>();
+        for (int row = 0; row < grid.size(); row++) {
+            if (!grid.get(row).contains(Boolean.FALSE)) {
+                filledRows.add(row);
+            }
+        }
+        return List.copyOf(filledRows);
     }
 
     public int clearFilledRows() {
