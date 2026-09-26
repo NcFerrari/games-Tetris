@@ -65,16 +65,6 @@ public class Board {
         return Output.render(grid);
     }
 
-    public List<Integer> findFilledRows() {
-        List<Integer> filledRows = new ArrayList<>();
-        for (int row = 0; row < grid.size(); row++) {
-            if (!grid.get(row).contains(Boolean.FALSE)) {
-                filledRows.add(row);
-            }
-        }
-        return List.copyOf(filledRows);
-    }
-
     public int clearFilledRows() {
         int before = grid.size();
         grid.removeIf(row -> !row.contains(Boolean.FALSE));

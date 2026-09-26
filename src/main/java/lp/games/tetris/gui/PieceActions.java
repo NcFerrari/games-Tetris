@@ -1,18 +1,12 @@
 package lp.games.tetris.gui;
 
 import javafx.scene.input.KeyCode;
-import lombok.Setter;
 import lp.games.tetris.core.Game;
 
 public class PieceActions {
 
     private final Game game;
     private final Rendering rendering;
-    /**
-     * Po dobu, kdy běží animace mazání řádků, se hráčovy povely ignorují.
-     */
-    @Setter
-    private boolean enabled = true;
 
     public PieceActions(Game game, Rendering rendering) {
         this.game = game;
@@ -20,9 +14,6 @@ public class PieceActions {
     }
 
     private void performAction(Runnable action) {
-        if (!enabled) {
-            return;
-        }
         action.run();
         rendering.render();
     }

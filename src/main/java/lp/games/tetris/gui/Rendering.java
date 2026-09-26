@@ -22,17 +22,12 @@ public class Rendering {
     private final double fieldSize;
     @Getter
     private final StringProperty scoreProperty = new SimpleStringProperty();
-    private boolean blinkVisible;
 
     public Rendering(Pane boardPane, Pane nextPiecePane, Game game, double fieldSize) {
         this.boardPane = boardPane;
         this.nextPiecePane = nextPiecePane;
         this.game = game;
         this.fieldSize = fieldSize;
-    }
-
-    public void setBlinkVisible(boolean blinkVisible) {
-        this.blinkVisible = blinkVisible;
     }
 
     public void render() {
@@ -44,25 +39,19 @@ public class Rendering {
     private void renderBoard() {
         List<StackPane> diamonds = new ArrayList<>();
         Board board = game.getBoard();
-        List<Integer> rowsToClear = game.getRowsToClear();
         for (int x = 0; x < board.getWidth(); x++) {
             for (int y = 0; y < board.getHeight(); y++) {
                 if (board.isOccupied(x, y)) {
-                    diamonds.add(Diamond.createDiamond(x, y, fieldSize, lockedFieldImage(rowsToClear, y)));
+                    diamonds.add(Diamond.createDiamond(x, y, fieldSize, DiamondColor.SILVER.getImage()));
                 }
             }
         }
-        if (!game.isGameOver() && !game.hasRowsToClear()) {
+        if (!game.isGameOver()) {
             diamonds.addAll(renderPiece(game.getCurrentPiece(),
                     game.getPositionOfCurrentPiece().x(),
                     game.getPositionOfCurrentPiece().y()));
         }
         boardPane.getChildren().setAll(diamonds);
-    }
-
-    private Image lockedFieldImage(List<Integer> rowsToClear, int row) {
-        boolean blinking = blinkVisible && rowsToClear.contains(row);
-        return blinking ? DiamondColor.GOLD.getImage() : DiamondColor.SILVER.getImage();
     }
 
     private void renderNextPiece() {

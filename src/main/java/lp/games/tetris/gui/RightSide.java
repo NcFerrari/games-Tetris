@@ -1,6 +1,7 @@
 package lp.games.tetris.gui;
 
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
@@ -24,7 +25,7 @@ public class RightSide extends VBox {
         Label scoreLabel = createLabel(null, width, Pos.CENTER_RIGHT);
         scoreLabel.textProperty().bind(values.scoreProperty());
 
-        StackPane nextPieceWindow = new StackPane(values.nextPiecePane());
+        StackPane nextPieceWindow = new StackPane(new Group(values.nextPiecePane()));
         nextPieceWindow.getStyleClass().add(NEXT_PIECE_WINDOW);
         nextPieceWindow.setMinHeight(values.nextPieceHeight());
 

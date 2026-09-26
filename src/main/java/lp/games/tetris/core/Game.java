@@ -2,7 +2,6 @@ package lp.games.tetris.core;
 
 import lombok.Getter;
 
-import java.util.List;
 import java.util.function.Supplier;
 
 public class Game {
@@ -21,8 +20,6 @@ public class Game {
     private boolean gameOver;
     @Getter
     private Piece nextPiece;
-    @Getter
-    private List<Integer> rowsToClear = List.of();
 
     public Game(Board board, Supplier<Piece> generatedPiece) {
         this(board, generatedPiece, GameSpeed.defaultSpeed());
@@ -49,7 +46,7 @@ public class Game {
     }
 
     private boolean move(int moveByX, int moveByY) {
-        if (isBlocked()) {
+        if (gameOver) {
             return false;
         }
         int x = positionOfCurrentPiece.x() + moveByX;
@@ -59,10 +56,6 @@ public class Game {
             return true;
         }
         return false;
-    }
-
-    private boolean isBlocked() {
-        return gameOver || hasRowsToClear();
     }
 
     public boolean moveLeft() {
@@ -77,23 +70,17 @@ public class Game {
         if (gameOver) {
             return false;
         }
-        if (hasRowsToClear()) {
-            clearPendingRows();
-            return false;
-        }
         if (move(0, 1)) {
             return true;
         }
         board.lock(currentPiece, positionOfCurrentPiece.x(), positionOfCurrentPiece.y());
-        rowsToClear = board.findFilledRows();
-        if (!hasRowsToClear()) {
-            spawn();
-        }
+        score += board.clearFilledRows();
+        spawn();
         return false;
     }
 
     public boolean rotateClockwise() {
-        if (isBlocked()) {
+        if (gameOver) {
             return false;
         }
         Piece possibleRotate = currentPiece.rotateClockwise();
@@ -104,26 +91,12 @@ public class Game {
         return false;
     }
 
-    public boolean hasRowsToClear() {
-        return !rowsToClear.isEmpty();
-    }
-
-    public void clearPendingRows() {
-        if (!hasRowsToClear()) {
-            return;
-        }
-        score += board.clearFilledRows();
-        rowsToClear = List.of();
-        spawn();
-    }
-
     public long getFallDelayNanos() {
         return speed.delayFor(score);
     }
 
     public void startNewGame() {
         gameOver = false;
-        rowsToClear = List.of();
         board.clear();
         score = 0;
         spawn();

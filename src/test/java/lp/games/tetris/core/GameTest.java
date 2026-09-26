@@ -3,7 +3,6 @@ package lp.games.tetris.core;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -91,7 +90,6 @@ class GameTest {
         board.lock(Piece.createJ().rotateClockwise().rotateClockwise(), 3, 3);
         assertTrue(game.moveDown());
         assertFalse(game.moveDown());
-        game.clearPendingRows();
         assertEquals("""
                 .....
                 .....
@@ -101,48 +99,6 @@ class GameTest {
                 ####.
                 """, board.toString());
         assertEquals(1, game.getScore());
-    }
-
-    @Test
-    void filledRowsWaitForClearing() {
-        game = new Game(board, () -> Piece.createZ().rotateClockwise());
-        board.lock(Piece.createI(), 0, 2);
-        board.lock(Piece.createJ(), 1, 3);
-        board.lock(Piece.createJ().rotateClockwise().rotateClockwise(), 3, 3);
-        game.moveDown();
-        game.moveDown();
-
-        assertAll(
-                () -> assertEquals(List.of(3), game.getRowsToClear(), "plný řádek zatím jen čeká"),
-                () -> assertEquals(0, game.getScore(), "skóre se počítá až při smazání"),
-                () -> assertTrue(board.isOccupied(4, 3), "řádek je pořád na desce"),
-                () -> assertFalse(game.moveLeft(), "během čekání se nehraje"),
-                () -> assertFalse(game.moveRight()),
-                () -> assertFalse(game.rotateClockwise())
-        );
-
-        game.clearPendingRows();
-        assertAll(
-                () -> assertFalse(game.hasRowsToClear()),
-                () -> assertEquals(1, game.getScore()),
-                () -> assertFalse(board.isOccupied(4, 3))
-        );
-    }
-
-    @Test
-    void moveDownClearsPendingRowsWhenNobodyElseDoes() {
-        game = new Game(board, () -> Piece.createZ().rotateClockwise());
-        board.lock(Piece.createI(), 0, 2);
-        board.lock(Piece.createJ(), 1, 3);
-        board.lock(Piece.createJ().rotateClockwise().rotateClockwise(), 3, 3);
-        game.moveDown();
-        game.moveDown();
-
-        assertFalse(game.moveDown());
-        assertAll(
-                () -> assertFalse(game.hasRowsToClear()),
-                () -> assertEquals(1, game.getScore())
-        );
     }
 
     @Test
@@ -221,8 +177,6 @@ class GameTest {
         game.moveDown();
         game.moveDown();
         game.moveDown();
-        assertEquals(0, game.getScore());
-        game.clearPendingRows();
         assertEquals(4, game.getScore());
 
         game.moveDown();
