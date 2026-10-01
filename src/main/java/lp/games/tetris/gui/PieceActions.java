@@ -25,6 +25,7 @@ public class PieceActions {
                 case RIGHT -> game.moveRight();
                 case DOWN -> game.moveDown();
                 case SPACE -> game.rotateClockwise();
+                case ENTER -> game.togglePause();
                 default -> {
                     // Do nothing for unmatched keys
                 }

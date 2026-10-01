@@ -130,6 +130,24 @@ class GameTest {
     }
 
     @Test
+    void pausing() {
+        assertTrue(game.moveDown());
+        assertTrue(game.moveRight());
+        assertTrue(game.moveLeft());
+        assertTrue(game.rotateClockwise());
+        game.togglePause();
+        assertFalse(game.moveDown());
+        assertFalse(game.moveRight());
+        assertFalse(game.moveLeft());
+        assertFalse(game.rotateClockwise());
+        game.togglePause();
+        assertTrue(game.moveDown());
+        assertTrue(game.moveRight());
+        assertTrue(game.moveLeft());
+        assertTrue(game.rotateClockwise());
+    }
+
+    @Test
     void commandsDoNothingAfterGameOver() {
         while (!game.isGameOver()) {
             game.moveDown();
@@ -140,6 +158,8 @@ class GameTest {
                 () -> assertFalse(game.moveRight()),
                 () -> assertFalse(game.rotateClockwise())
         );
+        game.togglePause();
+        assertFalse(game.isPaused());
     }
 
     @Test
@@ -186,6 +206,7 @@ class GameTest {
 
         game.startNewGame();
         assertFalse(game.isGameOver());
+        assertFalse(game.isPaused());
         assertEquals(0, game.getScore());
         assertEquals("""
                 .....

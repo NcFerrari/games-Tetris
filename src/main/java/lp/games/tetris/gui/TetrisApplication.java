@@ -8,6 +8,8 @@ import javafx.stage.Stage;
 import lp.games.tetris.core.Board;
 import lp.games.tetris.core.Game;
 import lp.games.tetris.core.PieceGenerator;
+import lp.games.tetris.gui.dialogs.GameOverDialog;
+import lp.games.tetris.gui.dialogs.PauseDialog;
 
 import java.util.Objects;
 import java.util.Random;
@@ -60,7 +62,8 @@ public class TetrisApplication extends Application {
         stage.show();
 
         GameOverDialog gameOverDialog = new GameOverDialog(START_NEW_GAME_TEXT, GAME_OVER_TEXT, GAME_CLOSE_TEXT, this::startNewGame);
-        gameLoop = new GameLoop(game, pieceActions, gameOverDialog);
+        PauseDialog pauseDialog = new PauseDialog(game);
+        gameLoop = new GameLoop(game, pieceActions, gameOverDialog, pauseDialog);
         mainPane.setRight(new RightSide(new RightSideValues(
                 STATISTIC_PANE_WIDTH,
                 rendering.getScoreProperty(),

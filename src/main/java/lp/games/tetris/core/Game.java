@@ -11,6 +11,8 @@ public class Game {
     @Getter
     private final Board board;
     @Getter
+    private boolean paused;
+    @Getter
     private Position positionOfCurrentPiece;
     @Getter
     private Piece currentPiece;
@@ -46,7 +48,7 @@ public class Game {
     }
 
     private boolean move(int moveByX, int moveByY) {
-        if (gameOver) {
+        if (isBlocked()) {
             return false;
         }
         int x = positionOfCurrentPiece.x() + moveByX;
@@ -58,6 +60,10 @@ public class Game {
         return false;
     }
 
+    private boolean isBlocked() {
+        return gameOver || paused;
+    }
+
     public boolean moveLeft() {
         return move(-1, 0);
     }
@@ -67,7 +73,7 @@ public class Game {
     }
 
     public boolean moveDown() {
-        if (gameOver) {
+        if (isBlocked()) {
             return false;
         }
         if (move(0, 1)) {
@@ -80,7 +86,7 @@ public class Game {
     }
 
     public boolean rotateClockwise() {
-        if (gameOver) {
+        if (isBlocked()) {
             return false;
         }
         Piece possibleRotate = currentPiece.rotateClockwise();
@@ -99,11 +105,18 @@ public class Game {
         gameOver = false;
         board.clear();
         score = 0;
+        paused = false;
         spawn();
     }
 
     @Override
     public String toString() {
         return Output.gameRender(board, currentPiece, positionOfCurrentPiece);
+    }
+
+    public void togglePause() {
+        if (!gameOver) {
+            paused = !paused;
+        }
     }
 }

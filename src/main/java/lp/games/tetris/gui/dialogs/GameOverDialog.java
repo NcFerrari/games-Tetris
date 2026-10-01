@@ -1,4 +1,4 @@
-package lp.games.tetris.gui;
+package lp.games.tetris.gui.dialogs;
 
 import javafx.application.Platform;
 import javafx.scene.control.ButtonType;
